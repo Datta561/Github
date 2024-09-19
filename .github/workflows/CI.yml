@@ -1,53 +1,24 @@
-name: Java CI Pipeline
+
+name: Java CI with Maven
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Step 2: Set up Java environment
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-
-      # Step 3: Cache Maven dependencies
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ ubuntu-latest }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ ubuntu-latest }}-maven-
-
-      # Step 4: Install dependencies
-      - name: Install dependencies
-        run: mvn install -p farm-dss
-
-      # Step 5: Build the project
-      - name: Build the project
-        run: mvn compile -p farm-dss
-
-      # Step 6: Run tests
-      - name: Run tests
-        run: mvn test
-
-      # Step 7: Upload test results (optional)
-     # - name: Upload test results
-      #  uses: actions/upload-artifact@v3
-      #  with:
-       #   name: test-results
-        #  path: target/surefire-reports/
+    - uses: actions/checkout@v4
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
