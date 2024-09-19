@@ -59,4 +59,4 @@ jobs:
             scp target/my-java-app.jar user@server:/path/to/deploy
 
             # Restart the application or server
-            #ssh user@server "sudo systemctl restart my-java-app"
+            ssh user@server "sudo systemctl restart my-java-app"
