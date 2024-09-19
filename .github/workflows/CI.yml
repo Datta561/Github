@@ -29,9 +29,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.m2/repository
-          key: ${{ ubuntu:latest }}-maven-${{ hashFiles('**/pom.xml') }}
+          key: ${{ ubuntu-latest }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ ubuntu:latest }}-maven-
+            ${{ ubuntu-latest }}-maven-
 
       # Step 4: Install dependencies
       - name: Install dependencies
