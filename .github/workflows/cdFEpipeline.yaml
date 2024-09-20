@@ -1,3 +1,14 @@
+name: CI/CD Pipeline
+
+# Trigger workflow on push or pull request
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -5,11 +16,11 @@ jobs:
     steps:
       # Checkout the code from the repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       # Set up Node.js environment
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '16'
           
@@ -22,14 +33,25 @@ jobs:
         run: npm test
 
   deploy:
+    # This job runs after the build job
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-      # Deploy to Heroku
-      - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy@v3.12.12
+      # Step 1: Checkout the code (optional, only if needed for deployment)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Deploy to production server via SSH
+      - name: Deploy to production
+        uses: appleboy/ssh-action@v0.1.3
         with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: "your-app-name"
-          heroku_email: "your-email@example.com"
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Copy application files to the server
+            scp -r * ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.SERVER_DEPLOY_PATH }}
+
+            # SSH into the server and restart the application
+            ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "cd ${{ secrets.SERVER_DEPLOY_PATH }} && ./restart-app.sh"
