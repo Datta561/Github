@@ -28,6 +28,6 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << 'EOF'
             cd ${{ secrets.DOCKER_COMPOSE_PATH }}
-            docker compose pull  # Optional: pull latest images
-            docker compose up -d  # Run the containers in detached mode
+            docker compose pull 
+            docker compose up -d  
           EOF
