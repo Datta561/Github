@@ -15,7 +15,7 @@ jobs:
       host: ${{secrets.AWS_EC2_HOST}}
       username: ${{secrets.AWS_EC2_USER}}
       scripts: |
-       
+       ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}
        cd ${{secrets.DOCKER_COMPOSE_PATH}}
        docker-compose up -d
  
