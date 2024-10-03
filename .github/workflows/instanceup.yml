@@ -14,6 +14,7 @@ jobs:
      with: 
       host: ${{secrets.AWS_EC2_HOST}}
       username: ${{secrets.AWS_EC2_USER}}
+      private-key: ${{secrets.AWS_PRIVATE_KEY}}
       scripts: |
        ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}
        cd ${{secrets.DOCKER_COMPOSE_PATH}}
